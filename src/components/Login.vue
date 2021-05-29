@@ -12,14 +12,14 @@
 import { ref } from '@vue/reactivity'
 import useLogin from "../composables/useLogin"
 export default {    
-    setup(){
+    setup(props,context){
         let {error,checkEmailAndPassword}=useLogin();
         let email=ref("");
         let password=ref("");
         let login=async()=>{
             let res=await checkEmailAndPassword(email.value,password.value);
             if(res){
-                console.log("true");
+              context.emit("enterChat");
             }
         }
         return{email,password,login,error}

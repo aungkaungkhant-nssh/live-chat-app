@@ -13,7 +13,7 @@
 import { ref } from '@vue/reactivity';
 import useSignUp from "../composables/useSignUp";
 export default {
-    setup(){
+    setup(props,context){
         let {error,createAccount}=useSignUp();
         let email=ref("");
         let password=ref("");
@@ -21,8 +21,9 @@ export default {
         let signUp=async()=>{
             let res=await createAccount(displayName.value,email.value,password.value);
             if(res){
-              console.log("true");
+                context.emit("enterChat");
             }
+
         }
         return{email,password,displayName,signUp,error};
     }
