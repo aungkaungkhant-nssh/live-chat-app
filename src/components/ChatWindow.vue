@@ -1,8 +1,8 @@
 <template>
      <div class="chat-window">
-        <div class="messages" v-for="message in messages" :key="message.id">
+        <div class="messages" v-for="message in formatMessages" :key="message.id">
             <div class="single">
-                <span class="created-at">{{message.created_at.toDate()}}</span>
+                <span class="created-at">{{message.created_at}}</span>
                 <span class="name">{{message.name}}</span>
                 <span class="message">{{message.message}}</span>
                
@@ -14,20 +14,26 @@
 <script>
 import { ref } from '@vue/reactivity';
 import { db } from '../firebase/config';
-
+import {formatDistanceToNow} from "date-fns"
+import { computed } from '@vue/runtime-core';
 export default {
     setup(){
-            let messages=ref([]);
+        let messages=ref([]);
+        let formatMessages=computed(()=>{
+            return messages.value.map((msg)=>{
+                let formatTime=formatDistanceToNow(msg.created_at.toDate());
+                return {...msg,created_at:formatTime};
+            })
+        })
         db.collection("messages").orderBy("created_at").onSnapshot((snap)=>{
               
-                snap.docs.forEach(doc =>{
-                    let document={...doc.data(),id:doc.id};
-                    doc.data() && messages.value.push(document);
-                    
-                })
+        snap.docs.forEach(doc =>{
+            let document={...doc.data(),id:doc.id};
+            doc.data() && messages.value.push(document);       
+            })
         })
         
-        return{messages};
+        return{formatMessages};
     }
 }   
 </script>
