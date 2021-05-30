@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="user">
+  <div class="container">
       <Navbar></Navbar>
       <NewChatForm></NewChatForm>
   </div>
@@ -12,9 +12,7 @@ import Navbar from '../components/Navbar'
 export default {
   components: {
     NewChatForm, Navbar },
-    setup(){
    
-    }
 }
 </script>
 
