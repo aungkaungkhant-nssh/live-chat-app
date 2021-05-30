@@ -2,22 +2,24 @@
      <div class="chat-window">
         <div class="messages" ref="scroll">
             <div class="single" v-for="message in formatMessages" :key="message.id" >
-                <span class="created-at">{{message.created_at}}</span>
-                <span class="name">{{message.name}}</span>
-                <span class="message">{{message.message}}</span>
-               
+                <span class="created-at" :class="{loginTime:user.displayName===message.name}">{{message.created_at}}</span>
+                <span class="name" :class="{loginMember:user.displayName===message.name}">{{message.name}}</span>
+                <span class="message"  :class="{loginMessage:user.displayName===message.name}">{{message.message}}</span>
             </div>
+    
         </div>
     </div>
 </template>
 
 <script>
 import { ref } from '@vue/reactivity';
-import { db } from '../firebase/config';
+import { auth, db } from '../firebase/config';
 import {formatDistanceToNow} from "date-fns"
 import { computed, onUpdated } from '@vue/runtime-core';
+
 export default {
     setup(){
+        let user=auth.currentUser;
         let scroll=ref(null);
         onUpdated(()=>{
             scroll.value.scrollTop=scroll.value.scrollHeight;
@@ -39,7 +41,7 @@ export default {
         })
        
         
-        return{formatMessages,scroll};
+        return{formatMessages,scroll,user};
     }
 }   
 </script>
@@ -62,9 +64,28 @@ export default {
       .name {
         font-weight: bold;
         margin-right: 6px;
+        color:indigo;
+         /* display: block; */
       }
       .messages {
         max-height: 400px;
         overflow: auto;
+        overflow-x: hidden;
+       
+      }
+      .loginTime{
+         margin:8px 0px 5px 700px;
+      }
+      .loginMember{
+        color:green;
+        margin-left:700px;
+      }
+      .message{
+         display: block;
+        margin:8px 0px 5px 0px;
+      }
+      .loginMessage{
+        display: block;
+        margin:8px 0px 5px 700px;
       }
 </style>
