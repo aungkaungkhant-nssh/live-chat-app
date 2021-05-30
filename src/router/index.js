@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Welcome from '../views/Welcome.vue'
 import Chatroom from '../views/Chatroom'
+
+
 const routes = [
   {
     path: '/',
@@ -10,7 +12,9 @@ const routes = [
   {
     path:"/chatroom",
     name:'Chatroom',
-    component:Chatroom
+    component:Chatroom,
+   
+   
   }
 ]
 

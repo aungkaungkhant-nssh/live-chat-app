@@ -11,10 +11,14 @@
 <script>
 import { ref } from '@vue/reactivity'
 import getUser from "../composables/getUser"
+import { auth } from '../firebase/config';
 export default {
     setup(){
         let {user}=getUser();
-        return {user}
+        let logout=async()=>{
+            await auth.signOut();
+        }
+        return {user,logout}
     }
 }
 </script>
