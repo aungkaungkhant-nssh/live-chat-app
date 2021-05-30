@@ -22,7 +22,7 @@ export default {
                 created_at:timestamp()
             }
             await addDoc(chat);
-           message.value="";
+            message.value="";
         }
         return{message,handleSubmit}
     }
