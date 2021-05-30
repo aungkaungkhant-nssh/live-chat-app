@@ -1,7 +1,7 @@
 <template>
      <div class="chat-window">
-        <div class="messages" v-for="message in formatMessages" :key="message.id">
-            <div class="single">
+        <div class="messages" ref="scroll">
+            <div class="single" v-for="message in formatMessages" :key="message.id" >
                 <span class="created-at">{{message.created_at}}</span>
                 <span class="name">{{message.name}}</span>
                 <span class="message">{{message.message}}</span>
@@ -15,9 +15,13 @@
 import { ref } from '@vue/reactivity';
 import { db } from '../firebase/config';
 import {formatDistanceToNow} from "date-fns"
-import { computed } from '@vue/runtime-core';
+import { computed, onUpdated } from '@vue/runtime-core';
 export default {
     setup(){
+        let scroll=ref(null);
+        onUpdated(()=>{
+            scroll.value.scrollTop=scroll.value.scrollHeight;
+        })
         let messages=ref([]);
         let formatMessages=computed(()=>{
             return messages.value.map((msg)=>{
@@ -26,14 +30,16 @@ export default {
             })
         })
         db.collection("messages").orderBy("created_at").onSnapshot((snap)=>{
-              
+        let result=[]; 
         snap.docs.forEach(doc =>{
             let document={...doc.data(),id:doc.id};
-            doc.data() && messages.value.push(document);       
+            doc.data().created_at && result.push(document);
             })
+            messages.value=result;
         })
+       
         
-        return{formatMessages};
+        return{formatMessages,scroll};
     }
 }   
 </script>
@@ -45,6 +51,7 @@ export default {
       }
       .single {
         margin: 18px 0;
+ 
       }
       .created-at {
         display: block;

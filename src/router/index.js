@@ -9,10 +9,10 @@ const routes = [
     component: Welcome,
     beforeEnter(to,from,next){
       let user=auth.currentUser;
-      if(user){
-        next({name:"Chatroom"});
+      if(!user){
+        next();
       }else{
-        next("/")
+        next({name:"Chatroom"})
       }
     }
   },
